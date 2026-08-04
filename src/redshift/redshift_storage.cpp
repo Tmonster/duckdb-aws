@@ -1,3 +1,4 @@
+#include "duckdb/common/identifier.hpp"
 #include "redshift/redshift_utils.hpp"
 
 #include "aws_client.hpp"
@@ -132,6 +133,13 @@ unique_ptr<Catalog> RedshiftAttach(optional_ptr<StorageExtensionInfo> storage_in
 
 	// Hand the postgres extension a plain connection string as the attach path.
 	info.path = connection_string;
+
+	// `CONNECT 'redshift:<id>'` attaches under a generated internal name, and the postgres catalog
+	// would otherwise identify itself in the prompt by the connection string above. Name it after the
+	// cluster instead. An explicit ATTACH alias is left alone.
+	if (db.HasGeneratedConnectName()) {
+		info.name = Identifier("redshift:" + cluster_id);
+	}
 
 	// Postgres must be given a secret name it can resolve: with none it falls back to the
 	// implicit '__default_postgres' secret, which it probes in the 'local_file' storage - and
