@@ -1,4 +1,3 @@
-#include "duckdb/common/identifier.hpp"
 #include "rds/rds_utils.hpp"
 
 #include "aws_client.hpp"

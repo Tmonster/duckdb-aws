@@ -1,4 +1,3 @@
-#include "duckdb/common/identifier.hpp"
 #include "redshift/redshift_utils.hpp"
 
 #include "aws_client.hpp"
